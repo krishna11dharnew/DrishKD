@@ -62,13 +62,13 @@ This project demonstrates how to build and scale a **modern AI SaaS product from
 Install the UI library:
 
 ```bash
-npm install virtual-ui-lib
+npm install kd-lib-krishna
 ```
 
 Use a generated component:
 
 ```jsx
-import { PricingCard } from "virtual-ui-lib";
+import { PricingCard } from "kd-lib-krishna";
 
 export default function App() {
   return <PricingCard />;

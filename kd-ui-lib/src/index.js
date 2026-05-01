@@ -56,5 +56,3 @@ export { ProductCard } from "./components/ProductCard/ProductCard.jsx";
 
 export { SidePanel } from "./components/SidePanel/SidePanel.jsx";
 
-
-////registry.npmjs.org/:_authToken=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

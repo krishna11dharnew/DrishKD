@@ -56,3 +56,15 @@ export { ProductCard } from "./components/ProductCard/ProductCard.jsx";
 
 export { SidePanel } from "./components/SidePanel/SidePanel.jsx";
 
+
+export { Graph } from "./components/Graph/Graph.jsx";
+
+export { Circle } from "./components/Circle/Circle.jsx";
+
+export { LineGraph } from "./components/LineGraph/LineGraph.jsx";
+
+export { Cup } from "./components/Cup/Cup.jsx";
+
+export { AddToCart } from "./components/AddToCart/AddToCart.jsx";
+
+export { LinkedInProfileCard } from "./components/LinkedInProfileCard/LinkedInProfileCard.jsx";

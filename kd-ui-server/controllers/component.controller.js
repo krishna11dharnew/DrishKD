@@ -1,42 +1,36 @@
-import User from "../models/user.model.js"
-import { askAI } from "../utils/openRouter.js"
+import User from "../models/user.model.js";
+import { askAI } from "../utils/openRouter.js";
 // for npm publish
 import fs from "fs";
 import path from "path";
 import { execSync } from "child_process";
 import Component from "../models/components.model.js";
 
+export const generateComponent = async (req, res) => {
+  try {
+    const { prompt } = req.body;
+    const user = await User.findById(req.userId);
 
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
 
-export const generateComponent = async (req,res)=>{
- try{
+    if (user.role === "user") {
+      if (user.aiCredits < 50) {
+        return res.status(400).json({
+          message: "Not enough AI credits"
+        });
+      }
+      user.aiCredits -= 50;
+      await user.save();
+    }
 
-  const { prompt } = req.body
-
-  const user = await User.findById(req.userId)
-
-  if(!user){
-   return res.status(404).json({
-    message:"User not found"
-   })
-  }
-
-  if(user.role === "user"){
-
-   if(user.aiCredits < 50){
-    return res.status(400).json({
-     message:"Not enough AI credits"
-    })
-   }
-
-   user.aiCredits -= 50
-   await user.save()
-  }
-
-  const messages = [
-  {
-    role: "system",
-    content: `You are a React component generator. Output ONLY a valid JSON object. No markdown, no backticks, no explanation.
+    const messages = [
+      {
+        role: "system",
+        content: `You are a React component generator. Output ONLY a valid JSON object. No markdown, no backticks, no explanation.
 
 CRITICAL: Your entire response must be parseable by JSON.parse(). Start with { and end with }.
 
@@ -91,50 +85,45 @@ OUTPUT FORMAT:
 
 --- EXAMPLE 4: Navbar ---
 {"name":"Navbar","code":"import React, { useState, useEffect } from \\"react\\";\\n\\nexport const Navbar = ({\\n  logo = \\"VirtualAI\\",\\n  links = [\\"Home\\", \\"Features\\", \\"Pricing\\", \\"Blog\\"],\\n  ctaText = \\"Get Started\\",\\n  accent = \\"#6366f1\\",\\n  bg = \\"#0f172a\\",\\n  onCtaClick = () => {},\\n  onLinkClick = () => {}\\n}) => {\\n  const [active, setActive] = useState(\\"Home\\");\\n  const [isMobile, setIsMobile] = useState(false);\\n  const alpha = (hex, op) => {\\n    const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);\\n    return \\"rgba(\\" + r + \\",\\" + g + \\",\\" + b + \\",\\" + op + \\")\\";\\n  };\\n  useEffect(() => {\\n    const check = () => setIsMobile(window.innerWidth < 768);\\n    check();\\n    window.addEventListener(\\"resize\\", check);\\n    return () => window.removeEventListener(\\"resize\\", check);\\n  }, []);\\n  return (\\n    <nav style={{ background: bg, borderBottom: \\"1px solid rgba(255,255,255,0.06)\\", fontFamily: \\"system-ui,sans-serif\\", width: \\"100%\\", boxSizing: \\"border-box\\", borderRadius: \\"12px\\" }}>\\n      <div style={{ maxWidth: \\"1100px\\", margin: \\"0 auto\\", padding: \\"0 20px\\", height: \\"60px\\", display: \\"flex\\", alignItems: \\"center\\", justifyContent: \\"space-between\\" }}>\\n        <div style={{ display: \\"flex\\", alignItems: \\"center\\", gap: \\"8px\\", cursor: \\"pointer\\" }}>\\n          <div style={{ width: \\"28px\\", height: \\"28px\\", borderRadius: \\"8px\\", background: \\"linear-gradient(135deg, \\" + accent + \\", \\" + alpha(accent, 0.6) + \\")\\" , display: \\"flex\\", alignItems: \\"center\\", justifyContent: \\"center\\", fontSize: \\"13px\\", fontWeight: \\"800\\", color: \\"#fff\\" }}>{logo[0]}</div>\\n          <span style={{ fontSize: \\"15px\\", fontWeight: \\"800\\", color: \\"#fff\\" }}>{logo}</span>\\n        </div>\\n        {!isMobile && (\\n          <div style={{ display: \\"flex\\", gap: \\"2px\\" }}>\\n            {links.map(link => (\\n              <button key={link} onClick={() => { setActive(link); onLinkClick(link); }} style={{ background: active === link ? alpha(accent, 0.12) : \\"transparent\\", border: \\"none\\", padding: \\"7px 16px\\", borderRadius: \\"9px\\", fontSize: \\"14px\\", fontWeight: active === link ? \\"700\\" : \\"500\\", color: active === link ? accent : \\"rgba(255,255,255,0.5)\\", cursor: \\"pointer\\", fontFamily: \\"inherit\\" }}>{link}</button>\\n            ))}\\n          </div>\\n        )}\\n        <button onClick={onCtaClick} style={{ padding: \\"8px 18px\\", borderRadius: \\"10px\\", border: \\"none\\", background: \\"linear-gradient(135deg, \\" + accent + \\", \\" + alpha(accent, 0.75) + \\")\\" , color: \\"#fff\\", fontSize: \\"13px\\", fontWeight: \\"700\\", cursor: \\"pointer\\", fontFamily: \\"inherit\\" }}>{ctaText}</button>\\n      </div>\\n    </nav>\\n  );\\n};","props":["logo","links","ctaText","accent","bg","onCtaClick","onLinkClick"]}`,
-  },
-  {
-    role: "user",
-    content: prompt,
+      },
+      {
+        role: "user",
+        content: prompt,
+      }
+    ];
+
+    const aiResponse = await askAI(messages);
+
+    let parsed;
+
+    try {
+      const clean = aiResponse
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
+
+      parsed = JSON.parse(clean);
+    } catch (error) {
+      console.log("AI RESPONSE:", aiResponse);
+      return res.status(500).json({
+        message: "AI returned invalid JSON"
+      });
+    }
+
+    res.json({
+      parsed,
+      remainingCredits: user.role === "user" ? user.aiCredits : null,
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: err.message });
   }
-  
-];
-
-  const aiResponse = await askAI(messages)
-
-  let parsed;
-
-  try {
-
-    const clean = aiResponse
-      .replace(/```json/g,"")
-      .replace(/```/g,"")
-      .trim()
-
-    parsed = JSON.parse(clean)
-
-  } catch (error) {
-
-    console.log("AI RESPONSE:", aiResponse)
-
-    return res.status(500).json({
-      message:"AI returned invalid JSON"
-    })
-
-  }
-
-  res.json({parsed, remainingCredits:
-        user.role === "user" ? user.aiCredits : null,})
-
- }catch(err){
-  console.log(err)
-  res.status(500).json({message:err.message})
- }
-}
+};
 
 export const saveComponent = async (req, res) => {
   try {
     const { name, code, props } = req.body;
-
     const user = await User.findById(req.userId);
 
     if (!user) {
@@ -174,16 +163,13 @@ export const saveComponent = async (req, res) => {
     });
 
     res.json(component);
-
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-
 export const publishComponent = async (req, res) => {
   try {
-
     const user = await User.findById(req.userId);
 
     if (!user || user.role !== "admin") {
@@ -193,7 +179,6 @@ export const publishComponent = async (req, res) => {
     }
 
     const { componentId } = req.body;
-
     const component = await Component.findById(componentId);
 
     if (!component) {
@@ -208,7 +193,8 @@ export const publishComponent = async (req, res) => {
       });
     }
 
-    const libPath = path.join(process.cwd(), "../virtual-ui-lib");
+    // Pointing to the correct library directory
+    const libPath = path.join(process.cwd(), "../kd-ui-lib");
 
     const componentDir = path.join(
       libPath,
@@ -221,23 +207,34 @@ export const publishComponent = async (req, res) => {
       `${component.name}.jsx`
     );
 
-    const indexFile = path.join(libPath, "src/index.js");
+    const srcDir = path.join(libPath, "src");
+    const indexFile = path.join(srcDir, "index.js");
 
-    // create component folder
+    // Ensure the base 'src' directory exists
+    if (!fs.existsSync(srcDir)) {
+      fs.mkdirSync(srcDir, { recursive: true });
+    }
+
+    // Create component folder
     if (!fs.existsSync(componentDir)) {
       fs.mkdirSync(componentDir, { recursive: true });
     }
 
-    // write component code
+    // Write component code
     fs.writeFileSync(componentFile, component.code);
 
-    // read index file
+    // Ensure index.js exists before trying to read it
+    if (!fs.existsSync(indexFile)) {
+      fs.writeFileSync(indexFile, "", "utf8");
+    }
+
+    // Read index file
     let indexContent = fs.readFileSync(indexFile, "utf8");
 
     const exportLine =
       `export { ${component.name} } from "./components/${component.name}/${component.name}.jsx";`;
 
-    // prevent duplicate export
+    // Prevent duplicate export
     if (!indexContent.includes(exportLine)) {
       fs.appendFileSync(indexFile, `\n${exportLine}\n`);
     }
@@ -283,9 +280,9 @@ export const publishComponent = async (req, res) => {
       stdio: "inherit"
     });
 
-    // update component visibility
+    // Update component visibility and target package name
     component.visibility = "public";
-    component.npmPackage = "virtual-ui-lib";
+    component.npmPackage = "kd-ui-lib";
 
     await component.save();
 
@@ -294,7 +291,6 @@ export const publishComponent = async (req, res) => {
     });
 
   } catch (error) {
-
     console.error("Publish Error:", error);
 
     res.status(500).json({
@@ -304,15 +300,13 @@ export const publishComponent = async (req, res) => {
   }
 };
 
-
 export const getAllComponents = async (req, res) => {
   try {
-    const components = await Component.find()
+       const components = await Component.find()
       .populate("owner", "name email")
       .sort({ createdAt: -1 });
 
     res.json(components);
-
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

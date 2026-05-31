@@ -3729,75 +3729,45 @@ var ReviewCard = ({
 // src/components/Card/Card.jsx
 import React23, { useState as useState20 } from "react";
 var Card = ({
-  title = "Performance",
-  description = "Real-time metrics with live dashboard updates every second.",
-  icon = "\u26A1",
-  tag = "Active",
-  onClick
+  title = "Default Title",
+  description = "This is a default description for the card component.",
+  image = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80",
+  accent = "#6366f1",
+  bg = "#0f172a",
+  onButtonClick = () => {
+  }
 }) => {
   const [hovered, setHovered] = useState20(false);
+  const alpha = (hex, op) => {
+    const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+    return "rgba(" + r + "," + g + "," + b + "," + op + ")";
+  };
   return /* @__PURE__ */ React23.createElement(
     "div",
     {
       onMouseEnter: () => setHovered(true),
       onMouseLeave: () => setHovered(false),
-      onClick,
       style: {
-        background: "#ffffff",
-        border: `0.5px solid ${hovered ? "#00000033" : "#0000001a"}`,
-        borderRadius: "12px",
-        padding: "1.25rem",
-        transition: "border-color 0.2s, transform 0.2s",
-        transform: hovered ? "translateY(-2px)" : "translateY(0)",
-        cursor: onClick ? "pointer" : "default",
-        position: "relative",
+        background: bg,
+        borderRadius: "20px",
         overflow: "hidden",
-        fontFamily: "sans-serif",
-        width: "260px"
+        width: "300px",
+        border: "1px solid " + (hovered ? alpha(accent, 0.3) : "rgba(255,255,255,0.07)"),
+        fontFamily: "system-ui,sans-serif",
+        transition: "transform 0.25s, box-shadow 0.25s",
+        transform: hovered ? "translateY(-4px)" : "translateY(0px)",
+        boxShadow: hovered ? "0 16px 40px rgba(0,0,0,0.5)" : "0 4px 20px rgba(0,0,0,0.3)"
       }
     },
-    /* @__PURE__ */ React23.createElement("div", { style: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      height: "3px",
-      background: "#1D9E75",
-      borderRadius: "12px 12px 0 0"
-    } }),
-    /* @__PURE__ */ React23.createElement("div", { style: {
-      width: 40,
-      height: 40,
-      borderRadius: 8,
-      background: "#E1F5EE",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      fontSize: 18,
-      marginBottom: 14
-    } }, icon),
-    /* @__PURE__ */ React23.createElement("p", { style: { fontSize: 15, fontWeight: 700, color: "#111", margin: "0 0 6px" } }, title),
-    /* @__PURE__ */ React23.createElement("p", { style: { fontSize: 13, color: "#666", lineHeight: 1.6, margin: "0 0 16px" } }, description),
-    /* @__PURE__ */ React23.createElement("div", { style: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      borderTop: "0.5px solid #0000001a",
-      paddingTop: 12
-    } }, /* @__PURE__ */ React23.createElement("span", { style: {
-      fontSize: 11,
-      fontWeight: 500,
-      padding: "3px 9px",
-      borderRadius: 20,
-      background: "#E1F5EE",
-      color: "#0F6E56"
-    } }, tag), /* @__PURE__ */ React23.createElement("span", { style: {
-      fontSize: 14,
-      color: "#999",
-      display: "inline-block",
-      transition: "transform 0.2s",
-      transform: hovered ? "translateX(3px)" : "translateX(0)"
-    } }, "\u2192"))
+    /* @__PURE__ */ React23.createElement("div", { style: { position: "relative", width: "100%", height: "180px", overflow: "hidden" } }, /* @__PURE__ */ React23.createElement("img", { src: image, alt: title, style: { width: "100%", height: "100%", objectFit: "cover", transform: hovered ? "scale(1.05)" : "scale(1)", transition: "transform 0.4s ease" } }), /* @__PURE__ */ React23.createElement("div", { style: { position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)" } })),
+    /* @__PURE__ */ React23.createElement("div", { style: { padding: "18px" } }, /* @__PURE__ */ React23.createElement("h3", { style: { fontSize: "15px", fontWeight: "700", color: "#fff", margin: "0 0 8px", lineHeight: 1.4 } }, title), /* @__PURE__ */ React23.createElement("p", { style: { fontSize: "13px", color: "rgba(255,255,255,0.45)", lineHeight: 1.65, margin: "0 0 18px" } }, description), /* @__PURE__ */ React23.createElement(
+      "button",
+      {
+        onClick: onButtonClick,
+        style: { width: "100%", padding: "11px", borderRadius: "12px", border: "none", background: "linear-gradient(135deg, " + accent + ", " + alpha(accent, 0.7) + ")", color: "#fff", fontSize: "13px", fontWeight: "700", cursor: "pointer", fontFamily: "inherit" }
+      },
+      "Learn More"
+    ))
   );
 };
 
@@ -4031,7 +4001,316 @@ var SidePanel = ({
   };
   return /* @__PURE__ */ React27.createElement("div", { style: { position: "fixed", top: 0, [position]: 0, height: "100vh", width: isOpen ? width : 0, zIndex: 1e3, transition: "width 0.3s ease" } }, /* @__PURE__ */ React27.createElement("div", { style: { position: "absolute", top: 0, [position]: 0, height: "100%", width, background: bg, borderLeft: position === "right" ? "1px solid rgba(255,255,255,0.08)" : "none", borderRight: position === "left" ? "1px solid rgba(255,255,255,0.08)" : "none", boxShadow: "0 0 40px rgba(0,0,0,0.5)" } }, /* @__PURE__ */ React27.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px", borderBottom: "1px solid rgba(255,255,255,0.08)" } }, /* @__PURE__ */ React27.createElement("div", { style: { fontSize: "18px", fontWeight: "700", color: "#fff" } }, title), /* @__PURE__ */ React27.createElement("button", { onClick: onClose, style: { background: "transparent", border: "none", cursor: "pointer", padding: "8px", borderRadius: "8px", transition: "background 0.2s" } }, /* @__PURE__ */ React27.createElement("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "rgba(255,255,255,0.5)", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", style: { transition: "stroke 0.2s" } }, /* @__PURE__ */ React27.createElement("line", { x1: "18", y1: "6", x2: "6", y2: "18" }), /* @__PURE__ */ React27.createElement("line", { x1: "6", y1: "6", x2: "18", y2: "18" })))), /* @__PURE__ */ React27.createElement("div", { style: { padding: "20px", overflowY: "auto", height: "calc(100% - 60px)" } }, children)));
 };
+
+// src/components/Graph/Graph.jsx
+import React28, { useState as useState25, useEffect as useEffect9, useRef as useRef5 } from "react";
+var Graph = ({
+  data = [25, 50, 75, 100, 75, 50, 25],
+  width = 600,
+  height = 300,
+  accent = "#6366f1",
+  bg = "#0f172a",
+  gridColor = "rgba(255,255,255,0.05)",
+  lineWidth = 2,
+  pointRadius = 4
+}) => {
+  const canvasRef = useRef5(null);
+  const alpha = (hex, op) => {
+    const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+    return "rgba(" + r + "," + g + "," + b + "," + op + ")";
+  };
+  const drawGraph = (ctx) => {
+    const padding = 40;
+    const graphWidth = width - padding * 2;
+    const graphHeight = height - padding * 2;
+    const maxValue = Math.max(...data);
+    const xStep = graphWidth / (data.length - 1);
+    const yScale = graphHeight / maxValue;
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = gridColor;
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 10; i++) {
+      const y = padding + graphHeight / 10 * i;
+      ctx.beginPath();
+      ctx.moveTo(padding, y);
+      ctx.lineTo(width - padding, y);
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = lineWidth;
+    data.forEach((value, i) => {
+      const x = padding + xStep * i;
+      const y = height - padding - value * yScale;
+      if (i === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
+    });
+    ctx.stroke();
+    ctx.fillStyle = accent;
+    data.forEach((value, i) => {
+      const x = padding + xStep * i;
+      const y = height - padding - value * yScale;
+      ctx.beginPath();
+      ctx.arc(x, y, pointRadius, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  };
+  useEffect9(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    drawGraph(ctx);
+  }, [data, width, height, accent, bg, gridColor, lineWidth, pointRadius]);
+  return /* @__PURE__ */ React28.createElement("div", { style: { background: bg, borderRadius: "20px", padding: "20px", width: width + "px", boxShadow: "0 10px 40px rgba(0,0,0,0.5)" } }, /* @__PURE__ */ React28.createElement("canvas", { ref: canvasRef, width, height }));
+};
+
+// src/components/Circle/Circle.jsx
+import React29 from "react";
+var Circle = ({ size = 120, color = "#6366f1", borderWidth = 4, borderColor = "rgba(255,255,255,0.12)", gradient = false }) => {
+  return /* @__PURE__ */ React29.createElement(
+    "div",
+    {
+      style: {
+        width: size,
+        height: size,
+        borderRadius: "50%",
+        background: gradient ? `linear-gradient(135deg, ${color}, rgba(99,102,241,0.5))` : color,
+        border: `${borderWidth}px solid ${borderColor}`,
+        boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden"
+      }
+    }
+  );
+};
+
+// src/components/LineGraph/LineGraph.jsx
+import React30, { useRef as useRef6, useEffect as useEffect10 } from "react";
+var LineGraph = ({
+  data = [65, 59, 80, 81, 56, 55, 40],
+  labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  accent = "#6366f1",
+  bg = "#0f172a",
+  width = 480,
+  height = 240
+}) => {
+  const canvasRef = useRef6(null);
+  useEffect10(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    const alpha = (hex, op) => {
+      const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+      return "rgba(" + r + "," + g + "," + b + "," + op + ")";
+    };
+    const drawGraph = () => {
+      ctx.clearRect(0, 0, width, height);
+      const maxValue = Math.max(...data);
+      const xScale = (width - 60) / (data.length - 1);
+      const yScale = (height - 60) / maxValue;
+      ctx.beginPath();
+      ctx.strokeStyle = "rgba(255,255,255,0.06)";
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= maxValue; i += 20) {
+        ctx.moveTo(40, height - 40 - i * yScale);
+        ctx.lineTo(width - 20, height - 40 - i * yScale);
+      }
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.strokeStyle = accent;
+      ctx.lineWidth = 3;
+      for (let i = 0; i < data.length; i++) {
+        const x = 40 + i * xScale;
+        const y = height - 40 - data[i] * yScale;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.fillStyle = accent;
+      for (let i = 0; i < data.length; i++) {
+        const x = 40 + i * xScale;
+        const y = height - 40 - data[i] * yScale;
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = "rgba(255,255,255,0.6)";
+      ctx.font = "12px system-ui,sans-serif";
+      ctx.textAlign = "center";
+      for (let i = 0; i < labels.length; i++) {
+        const x = 40 + i * xScale;
+        ctx.fillText(labels[i], x, height - 20);
+      }
+    };
+    drawGraph();
+  }, [data, labels, accent, bg, width, height]);
+  return /* @__PURE__ */ React30.createElement("div", { style: { background: bg, borderRadius: "12px", padding: "20px", boxShadow: "0 10px 40px rgba(0,0,0,0.4)" } }, /* @__PURE__ */ React30.createElement(
+    "canvas",
+    {
+      ref: canvasRef,
+      width,
+      height,
+      style: { width: "100%", height: "100%" }
+    }
+  ));
+};
+
+// src/components/Cup/Cup.jsx
+import React31 from "react";
+var Cup = ({
+  color = "#7c3aed",
+  height = "200px",
+  width = "150px",
+  liquidColor = "#6366f1",
+  liquidLevel = "70%",
+  borderColor = "rgba(255,255,255,0.12)",
+  shadowColor = "rgba(0,0,0,0.4)"
+}) => {
+  return /* @__PURE__ */ React31.createElement(
+    "div",
+    {
+      style: {
+        position: "relative",
+        width,
+        height,
+        borderRadius: "20px 20px 100px 100px",
+        background: color,
+        border: "2px solid " + borderColor,
+        boxShadow: "0 10px 40px " + shadowColor,
+        overflow: "hidden"
+      }
+    },
+    /* @__PURE__ */ React31.createElement(
+      "div",
+      {
+        style: {
+          position: "absolute",
+          bottom: 0,
+          width: "100%",
+          height: liquidLevel,
+          background: liquidColor,
+          borderRadius: "20px 20px 100px 100px",
+          transition: "height 0.3s ease"
+        }
+      }
+    ),
+    /* @__PURE__ */ React31.createElement(
+      "div",
+      {
+        style: {
+          position: "absolute",
+          bottom: "-10px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "80%",
+          height: "20px",
+          background: color,
+          borderRadius: "50%",
+          border: "2px solid " + borderColor
+        }
+      }
+    )
+  );
+};
+
+// src/components/AddToCart/AddToCart.jsx
+import React32, { useState as useState26 } from "react";
+var AddToCart = ({
+  initialCount = 0,
+  btnText = "Add to Cart",
+  accent = "#6366f1",
+  bg = "#0f172a",
+  onAdd = () => {
+  },
+  onRemove = () => {
+  }
+}) => {
+  const [count, setCount] = useState26(initialCount);
+  const alpha = (hex, op) => {
+    const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+    return "rgba(" + r + "," + g + "," + b + "," + op + ")";
+  };
+  const handleAdd = () => {
+    setCount((prev) => prev + 1);
+    onAdd(count + 1);
+  };
+  const handleRemove = () => {
+    if (count > 0) {
+      setCount((prev) => prev - 1);
+      onRemove(count - 1);
+    }
+  };
+  return /* @__PURE__ */ React32.createElement("div", { style: { display: "flex", alignItems: "center", gap: "12px" } }, /* @__PURE__ */ React32.createElement(
+    "button",
+    {
+      onClick: handleRemove,
+      style: {
+        padding: "8px 12px",
+        borderRadius: "8px",
+        border: "1px solid " + alpha(accent, 0.3),
+        background: "transparent",
+        color: count > 0 ? accent : "rgba(255,255,255,0.3)",
+        cursor: count > 0 ? "pointer" : "not-allowed",
+        fontSize: "14px",
+        fontWeight: "600",
+        fontFamily: "system-ui,sans-serif"
+      }
+    },
+    "-"
+  ), /* @__PURE__ */ React32.createElement("div", { style: {
+    width: "40px",
+    textAlign: "center",
+    fontSize: "16px",
+    fontWeight: "700",
+    color: "#fff"
+  } }, count), /* @__PURE__ */ React32.createElement(
+    "button",
+    {
+      onClick: handleAdd,
+      style: {
+        padding: "8px 12px",
+        borderRadius: "8px",
+        border: "none",
+        background: "linear-gradient(135deg, " + accent + ", " + alpha(accent, 0.7) + ")",
+        color: "#fff",
+        cursor: "pointer",
+        fontSize: "14px",
+        fontWeight: "600",
+        fontFamily: "system-ui,sans-serif"
+      }
+    },
+    btnText
+  ));
+};
+
+// src/components/LinkedInProfileCard/LinkedInProfileCard.jsx
+import React33 from "react";
+var LinkedInProfileCard = ({
+  name = "John Doe",
+  title = "Software Engineer",
+  location = "San Francisco, CA",
+  connections = 500,
+  image = "https://randomuser.me/api/portraits/men/1.jpg",
+  accent = "#0ea5e9",
+  bg = "#0f172a",
+  onConnectClick = () => {
+  },
+  onMessageClick = () => {
+  }
+}) => {
+  const alpha = (hex, op) => {
+    const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+    return "rgba(" + r + "," + g + "," + b + "," + op + ")";
+  };
+  return /* @__PURE__ */ React33.createElement("div", { style: { background: bg, borderRadius: "20px", padding: "20px", width: "280px", fontFamily: "system-ui,sans-serif", boxShadow: "0 10px 40px rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.08)" } }, /* @__PURE__ */ React33.createElement("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", marginBottom: "16px" } }, /* @__PURE__ */ React33.createElement("img", { src: image, alt: name, style: { width: "80px", height: "80px", borderRadius: "50%", border: "3px solid " + alpha(accent, 0.3) } }), /* @__PURE__ */ React33.createElement("div", { style: { textAlign: "center" } }, /* @__PURE__ */ React33.createElement("div", { style: { fontSize: "18px", fontWeight: "700", color: "#fff" } }, name), /* @__PURE__ */ React33.createElement("div", { style: { fontSize: "13px", color: "rgba(255,255,255,0.6)", marginTop: "4px" } }, title), /* @__PURE__ */ React33.createElement("div", { style: { fontSize: "12px", color: "rgba(255,255,255,0.4)", marginTop: "4px" } }, location)), /* @__PURE__ */ React33.createElement("div", { style: { fontSize: "12px", color: "rgba(255,255,255,0.4)", marginTop: "8px" } }, connections, "+ connections")), /* @__PURE__ */ React33.createElement("div", { style: { display: "flex", gap: "8px" } }, /* @__PURE__ */ React33.createElement("button", { onClick: onConnectClick, style: { flex: 1, padding: "8px", borderRadius: "8px", border: "none", background: "linear-gradient(135deg, " + accent + ", " + alpha(accent, 0.75) + ")", color: "#fff", fontSize: "13px", fontWeight: "700", cursor: "pointer" } }, "Connect"), /* @__PURE__ */ React33.createElement("button", { onClick: onMessageClick, style: { flex: 1, padding: "8px", borderRadius: "8px", border: "1px solid " + alpha(accent, 0.3), background: "transparent", color: accent, fontSize: "13px", fontWeight: "700", cursor: "pointer" } }, "Message")));
+};
 export {
+  AddToCart,
   AnimatedButton,
   AnimatedForm,
   AvatarCard,
@@ -4039,13 +4318,18 @@ export {
   Button,
   Card,
   Charts,
+  Circle,
   ColorPicker,
+  Cup,
   EcommerceCard,
   FileUpload,
   Footer,
+  Graph,
   ImageCard,
   ImageSlider,
   InvoiceCard,
+  LineGraph,
+  LinkedInProfileCard,
   Loader,
   Navbar,
   NotificationToast,

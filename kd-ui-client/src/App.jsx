@@ -38,30 +38,51 @@ function App() {
     fetchUser();
   }, [dispatch]);
 
-  // ✅ Fetch extra data ONLY if admin/user exists
-  useEffect(() => {
-    if (!userData) return;
+// ✅ Fetch Users
+useEffect(() => {
+  if (!userData) return;
 
-    const fetchExtraData = async () => {
-      try {
-        const [usersRes, componentsRes] = await Promise.all([
-          axios.get(`${ServerUrl}/api/user/all-users`, {
-            withCredentials: true,
-          }),
-          axios.get(`${ServerUrl}/api/component/all-components`, {
-            withCredentials: true,
-          }),
-        ]);
+  const fetchUsers = async () => {
+    try {
+      const usersRes = await axios.get(
+        `${ServerUrl}/api/user/all-users`,
+        {
+          withCredentials: true,
+        }
+      );
 
-        dispatch(setAllUsers(usersRes.data));
-        dispatch(setAllComponents(componentsRes.data));
-      } catch (error) {
-        console.error("Extra API Error:", error);
-      }
-    };
+      dispatch(setAllUsers(usersRes.data));
+    } catch (error) {
+      console.error("Users API Error:", error);
+    }
+  };
 
-    fetchExtraData();
-  }, [userData, dispatch]);
+  fetchUsers();
+}, [userData, dispatch]);
+
+
+
+// ✅ Fetch Components
+useEffect(() => {
+  if (!userData) return;
+
+  const fetchComponents = async () => {
+    try {
+      const componentsRes = await axios.get(
+        `${ServerUrl}/api/component/all-components`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      dispatch(setAllComponents(componentsRes.data));
+    } catch (error) {
+      console.error("Components API Error:", error);
+    }
+  };
+
+  fetchComponents();
+}, [userData, dispatch]);
 
   // ❌ REMOVE full screen loader
   // ✔️ Instead allow render immediately

@@ -15,7 +15,7 @@ import {
   TbLogout,
   TbComponents,
 } from "react-icons/tb";
-import { SiValorant } from "react-icons/si";
+// import { SiValorant } from "react-icons/si";
 import Auth from "../components/Auth";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";

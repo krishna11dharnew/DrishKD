@@ -44,8 +44,10 @@ export default function ComponentGenerator() {
   const [isPublished, setIsPublished]         = useState(false);
 
   const { userData } = useSelector((state) => state.user);
-  const userRole     = userData.role;
-  const aiCredits    = userData.aiCredits ?? 0;
+  
+  // FIX: Added optional chaining (?) to prevent crash if userData is null
+  const userRole     = userData?.role;
+  const aiCredits    = userData?.aiCredits ?? 0;
   const lowCredits   = userRole === "user" && aiCredits < 50;
 
   const navigate = useNavigate();
@@ -71,12 +73,12 @@ export default function ComponentGenerator() {
       );
       setGenerated(data.parsed);
 
-       dispatch(
-  setUserData({
-    ...userData,
-    aiCredits: data.remainingCredits
-  })
-);
+      dispatch(
+        setUserData({
+          ...userData,
+          aiCredits: data.remainingCredits
+        })
+      );
       setActiveTab("preview");
     } catch (err) {
       showToast(err.response?.data?.message || "Generation failed", "error");

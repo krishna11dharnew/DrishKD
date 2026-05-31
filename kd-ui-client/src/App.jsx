@@ -12,7 +12,7 @@ import MyComponentsPage from "./pages/MyComponentsPage";
 
 import { setAllComponents, setAllUsers, setUserData } from "./redux/userSlice";
 
-export const ServerUrl = "http://localhost:8000";
+export const ServerUrl = "https://drishkd.onrender.com";
 
 function App() {
   const dispatch = useDispatch();
